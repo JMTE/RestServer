@@ -10,6 +10,7 @@ class Server{
 
         this.app=express();
         this.port=process.env.PORT
+        this.usuariosPath="/api/usuarios"
 
         //Middlewares
         this.middlewares();
@@ -26,33 +27,10 @@ class Server{
 
     routes(){
         
+        this.app.use(this.usuariosPath, require("../routes/user"))
 
         //con el middleware enviamos la carpeta publica y con este codigo enviamos nuestro endpoint
-        this.app.get('/api',  (req, res)=> {
-            res.json ({
-                ok:true,
-                msg:"get API"
-            })
-          })
-          this.app.put('/api',  (req, res)=> {
-            res.json ({
-                ok:true,
-                msg:"put API"
-            })
-          })
-          this.app.post('/api',  (req, res)=> {
-            res.json ({
-                ok:true,
-                msg:"post API"
-            })
-          })
-          this.app.delete('/api',  (req, res)=> {
-            res.json ({
-                ok:true,
-                msg:"delete API"
-            })
-          })
-          
+       
     }
 
     listen(){
