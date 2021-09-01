@@ -26,15 +26,9 @@ const Usuario=require("../models/usuario");
     const body=req.body;
     const usuario=new Usuario({nombre,correo,password,role});
 
-    //Verificar si el correo existe
+   
 
-    const existeCorreo=await Usuario.findOne({correo:correo})
-    if (existeCorreo){
-      return res.status(400).json({
-
-        msg:"El correo ya esta registrado"
-      })
-    }
+    
     //Encriptar la contraseña
 
     const salt=bcryptjs.genSaltSync();
