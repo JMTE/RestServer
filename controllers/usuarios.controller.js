@@ -6,6 +6,7 @@ const bcryptjs=require("bcryptjs");
 
 const Usuario=require("../models/usuario");
 
+
  const usuariosGet=(req=request, res=response)=> {
 
     const {q,nombre,apikey}=req.query;
@@ -20,12 +21,14 @@ const Usuario=require("../models/usuario");
 
   const usuariosPost=async (req, res=response)=> {
 
+    
     const {nombre,correo,password,role}=req.body;
     const body=req.body;
     const usuario=new Usuario({nombre,correo,password,role});
 
-    //Verificar si el correo existe
+   
 
+    
     //Encriptar la contraseña
 
     const salt=bcryptjs.genSaltSync();
