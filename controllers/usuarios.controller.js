@@ -13,12 +13,28 @@ const Usuario=require("../models/usuario");
 
     //const {q,nombre,apikey}=req.query;
     const {limite=5, desde =0}=req.query;
-    const usuarios=await Usuario.find()
-    .skip(Number(desde))
-    .limit(Number (limite))
+
+   
+    // const usuarios=await Usuario.find({estado:true})
+    // .skip(Number(desde))
+    // .limit(Number (limite))
+
+    // const totalRegistros=await Usuario.countDocuments({estado:true});
+
+    //La anterior forma estaria desfasada y aumentaria el tiempo de respuesta, por eso vamos a hacer una promesa para que las dos interacciones se hagan de forma simultanea
+    const [total, usuarios] = await Promise.all([
+      Usuario.countDocuments({estado:true}),
+      Usuario.find({estado:true})
+      .skip(Number(desde))
+      .limit(Number(limite))
+    ])
 
     res.json ({
-       usuarios
+      // totalRegistros,
+      //  usuarios
+
+      total,
+      usuarios
     })
   }
 
