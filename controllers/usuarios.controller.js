@@ -7,18 +7,25 @@ const bcryptjs=require("bcryptjs");
 const Usuario=require("../models/usuario");
 
 
- const usuariosGet=(req=request, res=response)=> {
+//GET
 
-    const {q,nombre,apikey}=req.query;
+ const usuariosGet=async(req=request, res=response)=> {
+
+    //const {q,nombre,apikey}=req.query;
+    const {limite=5, desde =0}=req.query;
+    const usuarios=await Usuario.find()
+    .skip(Number(desde))
+    .limit(Number (limite))
+
     res.json ({
-        ok:true,
-        msg:"get API - Controlador",
-        q,
-        nombre,
-        apikey
+       usuarios
     })
   }
 
+  
+  //POST
+  
+  
   const usuariosPost=async (req, res=response)=> {
 
     
@@ -65,9 +72,7 @@ const Usuario=require("../models/usuario");
 
 
     res.json ({
-        ok:true,
-        msg:"Put API - Controlador",
-        id,
+        
         usuarioDB
         
     })
