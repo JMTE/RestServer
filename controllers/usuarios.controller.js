@@ -94,14 +94,29 @@ const Usuario=require("../models/usuario");
     })
   }
 
-  const usuariosDel=(req, res=response)=> {
 
+  //DELETE
+
+  const usuariosDel=async (req, res=response)=> {
+
+    const {id}=req.params;
     
+    //BORRAR FISICAMENTE
+    // const usuario=await Usuario.findByIdAndDelete(id);
+
+    //BORRAR ESTADO A FALSE Y NO FISICAMENTE
+
+    const usuario=await Usuario.findByIdAndUpdate(id, {estado:false});
+
     res.json ({
-        ok:true,
-        msg:"Delete API - Controlador"
+        usuario,
+        id
     })
   }
+
+
+
+
 
   const usuariosPatch=(req, res=response)=> {
 
@@ -109,6 +124,7 @@ const Usuario=require("../models/usuario");
     res.json ({
         ok:true,
         msg:"Patch API - Controlador"
+        
     })
   }
 

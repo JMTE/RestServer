@@ -42,7 +42,21 @@ router.get('/', usuariosGet)
     check('role').custom(esRoleValido),
     validarCampos
   ], usuariosPost)
-  router.delete('/', usuariosDel)
+
+  //DELETE 
+
+  router.delete('/:id', [
+
+    check("id", "No es una id valida en Mongo").isMongoId(),
+    check("id").custom(idExiste),
+    validarCampos
+
+
+
+
+  ], usuariosDel) 
+
+
   router.patch("/",usuariosPatch)
   
 
