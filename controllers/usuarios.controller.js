@@ -48,7 +48,7 @@ const Usuario=require("../models/usuario");
 
     const id=req.params.id;
     
-    const {password, google,correo, ... resto}= req.body;
+    const {_id, password, google,correo, ... resto}= req.body;
 
     //Validar contra BBDD
 
