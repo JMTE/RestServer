@@ -7,18 +7,41 @@ const bcryptjs=require("bcryptjs");
 const Usuario=require("../models/usuario");
 
 
- const usuariosGet=(req=request, res=response)=> {
+//GET
 
-    const {q,nombre,apikey}=req.query;
+ const usuariosGet=async(req=request, res=response)=> {
+
+    //const {q,nombre,apikey}=req.query;
+    const {limite=5, desde =0}=req.query;
+
+   
+    // const usuarios=await Usuario.find({estado:true})
+    // .skip(Number(desde))
+    // .limit(Number (limite))
+
+    // const totalRegistros=await Usuario.countDocuments({estado:true});
+
+    //La anterior forma estaria desfasada y aumentaria el tiempo de respuesta, por eso vamos a hacer una promesa para que las dos interacciones se hagan de forma simultanea
+    const [total, usuarios] = await Promise.all([
+      Usuario.countDocuments({estado:true}),
+      Usuario.find({estado:true})
+      .skip(Number(desde))
+      .limit(Number(limite))
+    ])
+
     res.json ({
-        ok:true,
-        msg:"get API - Controlador",
-        q,
-        nombre,
-        apikey
+      // totalRegistros,
+      //  usuarios
+
+      total,
+      usuarios
     })
   }
 
+  
+  //POST
+  
+  
   const usuariosPost=async (req, res=response)=> {
 
     
@@ -44,24 +67,56 @@ const Usuario=require("../models/usuario");
     })
   }
 
-  const usuariosPut=(req, res=response)=> {
+  const usuariosPut=async(req, res=response)=> {
 
-    const id=req.params.id; 
+    const id=req.params.id;
+    
+    const {_id, password, google,correo, ... resto}= req.body;
+
+    //Validar contra BBDD
+
+    if (password){
+      //Encriptar la contraseña
+      const salt=bcryptjs.genSaltSync();
+
+      resto.password=bcryptjs.hashSync(password,salt);
+  
+
+    }
+
+    const usuarioDB=await Usuario.findByIdAndUpdate(id,resto)
+
+
     res.json ({
-        ok:true,
-        msg:"Put API - Controlador",
+        
+        usuarioDB
+        
+    })
+  }
+
+
+  //DELETE
+
+  const usuariosDel=async (req, res=response)=> {
+
+    const {id}=req.params;
+    
+    //BORRAR FISICAMENTE
+    // const usuario=await Usuario.findByIdAndDelete(id);
+
+    //BORRAR ESTADO A FALSE Y NO FISICAMENTE
+
+    const usuario=await Usuario.findByIdAndUpdate(id, {estado:false});
+
+    res.json ({
+        usuario,
         id
     })
   }
 
-  const usuariosDel=(req, res=response)=> {
 
-    
-    res.json ({
-        ok:true,
-        msg:"Delete API - Controlador"
-    })
-  }
+
+
 
   const usuariosPatch=(req, res=response)=> {
 
@@ -69,6 +124,7 @@ const Usuario=require("../models/usuario");
     res.json ({
         ok:true,
         msg:"Patch API - Controlador"
+        
     })
   }
 

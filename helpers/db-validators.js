@@ -22,3 +22,16 @@ const esRoleValido = async(role = '') => {
       esRoleValido,
       emailExiste
   }
+
+
+  const idExiste=async(id="")=>{
+    const existeId= await Usuario.findById({_id:id})
+    if (!existeId){
+      throw new Error (`La id ${id} no existe en la BBDD`)
+    }
+    }
+    module.exports={
+        esRoleValido,
+        emailExiste,
+        idExiste
+    }
